@@ -15,7 +15,7 @@ export interface UserInterface {
 // Schema
 export const documentTypeSchema = ['CC','CE','TI','PP'];
 export const roleSchema = ['superadmin','admin','user'];
-const UserSchema = z.object({
+const UserCreateSchema = z.object({
     document_type: z.enum(documentTypeSchema as [string, ...string[]]),
     document: z.number(),
     name: z.string(),
@@ -23,8 +23,17 @@ const UserSchema = z.object({
     role: z.enum(roleSchema as [string, ...string[]]),
     active: z.boolean().optional()
 })
+const UserModifySchema = z.object({
+    document_type: z.enum(documentTypeSchema as [string, ...string[]]).optional(),
+    document: z.number().optional(),
+    name: z.string().optional(),
+    password: z.string().optional(),
+    role: z.enum(roleSchema as [string, ...string[]]).optional(),
+    active: z.boolean().optional()
+})
 
 // Validator
-export const validateUserSchema = validate(UserSchema);
+export const validateUserSchema = validate(UserCreateSchema);
+export const validateModifyUserSchema = validate(UserModifySchema);
 
 

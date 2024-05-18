@@ -43,6 +43,14 @@ export async function modifyUser(id:number, UserInterface: UserInterface){
     if(userDocument && userDocument.id != id){
         throw new httpError('Ya existe el usuario',400);
     }
+    if (UserInterface.password){
+        if (UserInterface.password.length != 4){
+            UserInterface.password = user.password;
+        }
+        else{
+            UserInterface.password = generatePassword(UserInterface.password);
+        }
+    }
     await user.update(UserInterface);
     return {message: "Usuario modificado"}
 }

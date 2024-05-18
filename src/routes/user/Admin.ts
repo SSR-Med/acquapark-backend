@@ -5,7 +5,7 @@ import { getUsers, createUser, changeStateUser, modifyUser } from "../../service
 // CustomError
 import { errorHandler } from "../../config/CustomError";
 // Validate user schema 
-import { validateUserSchema } from "../../schemas/UserSchema";
+import { validateUserSchema, validateModifyUserSchema } from "../../schemas/UserSchema";
 
 const router = Router();
 router.use(express.json());
@@ -46,7 +46,7 @@ router.patch("/:id", async (req, res) => {
 })
 
 // Modify user
-router.put("/:id",validateUserSchema, async (req, res) => {
+router.put("/:id",validateModifyUserSchema, async (req, res) => {
     try{
         const user = await modifyUser(Number(req.params.id), req.body);
         return res.status(200).json(user);
