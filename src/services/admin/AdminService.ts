@@ -15,7 +15,7 @@ export async function getUsers(){
     return users;
 }
 
-export async function getUserByDocument(document_type:string,document:number){
+export async function getUserIdByDocument(document_type:string,document:number){
     const user = await User.findOne({where:{document:document,document_type:document_type}});
     if(!user){
         throw new httpError('No se encontró al usuario',404);

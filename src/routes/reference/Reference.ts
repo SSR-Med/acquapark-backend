@@ -3,7 +3,7 @@ import express, { Router } from "express";
 // Custom error
 import { errorHandler } from "../../config/CustomError";
 // Services
-import { getReferences, deleteReference, modifyReference, createReference } from "../../services/reference/ReferenceService";
+import { getReferences, getNameReferenceByIdNumber, deleteReference, modifyReference, createReference } from "../../services/reference/ReferenceService";
 // Helpers
 import { verifyToken } from "../../helpers/Token";
 import checkAdmin from "../../helpers/CheckAdmin";
@@ -17,6 +17,17 @@ router.get("/",verifyToken,checkAdmin, async (req, res) => {
     try{
         const references = await getReferences();
         return res.status(200).json(references);
+    }
+    catch(error: any){
+        return errorHandler(error, res);
+    }
+})
+
+// Return name reference
+router.get("/id_number/:id_number",verifyToken,checkAdmin, async (req, res) => {
+    try{
+        const reference = await getNameReferenceByIdNumber(Number(req.params.id_number));
+        return res.status(200).json(reference);
     }
     catch(error: any){
         return errorHandler(error, res);

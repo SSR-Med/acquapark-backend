@@ -10,6 +10,14 @@ export async function getReferences(){
     return references;
 }
 
+export async function getNameReferenceByIdNumber(id_number:Number){
+    const reference = await Reference.findOne({where:{id_number:id_number}});
+    if(!reference){
+        throw new httpError('No se encontró la referencia',404);
+    }
+    return {name: reference.name};
+}
+
 export async function deleteReference(id:Number){
     const reference = await Reference.findOne({where:{id:id}});
     if(!reference){
