@@ -24,7 +24,7 @@ router.get("/",verifyToken,checkAdmin, async (req, res) => {
 })
 
 // Return name reference
-router.get("/id_number/:id_number",verifyToken,checkAdmin, async (req, res) => {
+router.get("/id_number/:id_number",verifyToken,async (req, res) => {
     try{
         const reference = await getNameReferenceByIdNumber(Number(req.params.id_number));
         return res.status(200).json(reference);
