@@ -29,7 +29,7 @@ router.get("/", verifyToken,checkAdmin,async (req, res) => {
 // Create user
 router.post("/",verifyToken,checkAdmin,validateUserSchema, async (req, res) => {
     try{
-        const user = await createUser(req.body);
+        const user = await createUser(req.body,Number(req.params.idToken));
         return res.status(201).json(user);
     }
     catch(error: any){
@@ -40,7 +40,7 @@ router.post("/",verifyToken,checkAdmin,validateUserSchema, async (req, res) => {
 // Disable user
 router.patch("/:id",verifyToken,checkAdmin, async (req, res) => {
     try{
-        const user = await changeStateUser(Number(req.params.id));
+        const user = await changeStateUser(Number(req.params.id),Number(req.params.idToken));
         return res.status(200).json(user);
     }
     catch(error: any){
@@ -51,7 +51,7 @@ router.patch("/:id",verifyToken,checkAdmin, async (req, res) => {
 // Modify user
 router.put("/:id",verifyToken,checkAdmin,validateModifyUserSchema, async (req, res) => {
     try{
-        const user = await modifyUser(Number(req.params.id), req.body);
+        const user = await modifyUser(Number(req.params.id), req.body,Number(req.params.idToken));
         return res.status(200).json(user);
     }
     catch(error: any){

@@ -10,6 +10,7 @@ export interface UserInterface {
     name: string;
     password: string;
     role: string;
+    active?: boolean;
 }
 export interface loginInterface{
     document_type: string;
