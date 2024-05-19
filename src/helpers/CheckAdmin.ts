@@ -9,6 +9,6 @@ export default async function checkAdmin(req: Request, res: Response, next: Next
         next();
     }
     else{
-        return res.status(403).json({ message: "User is not superAdmin" });
+        return res.status(403).json({ message: "User is not admin" });
     }
 }

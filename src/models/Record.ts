@@ -3,7 +3,7 @@ import { DataTypes } from "sequelize";
 // Database
 import {database} from "../config/Database";
 
-export const Registry = database.define('registry',{
+export const Record = database.define('record',{
     id: {
         type: DataTypes.BIGINT,
         autoIncrement: true,

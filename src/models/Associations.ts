@@ -1,6 +1,6 @@
 // Models
 import {User} from "./User";
-import { Registry } from "./Registry";
+import { Registry } from "./Record";
 
 // Associations
 User.hasMany(Registry, {foreignKey: 'id_user'});

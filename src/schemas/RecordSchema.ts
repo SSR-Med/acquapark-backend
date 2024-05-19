@@ -4,7 +4,7 @@ import {z} from "zod";
 import { validate } from "../helpers/Validator";
 
 // Interface 
-export interface RegistryInterface {
+export interface RecordInterface {
     id_user: number;
     reference: string;
     date: string;
@@ -13,7 +13,7 @@ export interface RegistryInterface {
 }
 
 // Schema
-export const RegistrySchema = z.object({
+const RecordSchema = z.object({
     id_user: z.number(),
     reference: z.string(),
     date: z.string(),
@@ -21,4 +21,4 @@ export const RegistrySchema = z.object({
     large: z.number()
 })
 // Validator
-export const validateRegistrySchema = validate(RegistrySchema);
+export const validateRecordSchema = validate(RecordSchema);

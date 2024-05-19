@@ -11,7 +11,7 @@ const app: Express = express();
 // Models
 const {Reference} = require("./models/Reference");
 const {User} = require("./models/User");
-const {Registry} = require("./models/Registry");
+const {Record} = require("./models/Record");
 
 // Middleware and json
 app.use(express.json());
@@ -21,7 +21,8 @@ app.use(cors());
 app.use("/", require("./routes/login/Login"));
 app.use("/admin", require("./routes/user/Admin"));
 app.use("/token", require("./routes/token/Token"));
-app.use("/registry", require("./routes/registry/Registry"));
+app.use("/record", require("./routes/record/Record"));
+app.use("/reference", require("./routes/reference/Reference"));
 
 database
   .authenticate()
