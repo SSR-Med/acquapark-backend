@@ -11,6 +11,11 @@ export interface UserInterface {
     password: string;
     role: string;
 }
+export interface loginInterface{
+    document_type: string;
+    document: number;
+    password: string;
+}
 
 // Schema
 export const documentTypeSchema = ['CC','CE','TI','PP'];
@@ -31,9 +36,15 @@ const UserModifySchema = z.object({
     role: z.enum(roleSchema as [string, ...string[]]).optional(),
     active: z.boolean().optional()
 })
+const loginSchema = z.object({
+    document_type: z.enum(documentTypeSchema as [string, ...string[]]),
+    document: z.number(),
+    password: z.string().length(4)
+})
 
 // Validator
 export const validateUserSchema = validate(UserCreateSchema);
 export const validateModifyUserSchema = validate(UserModifySchema);
+export const validateLoginSchema = validate(loginSchema);
 
 

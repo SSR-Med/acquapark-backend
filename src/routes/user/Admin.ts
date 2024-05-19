@@ -6,6 +6,9 @@ import { getUsers, createUser, changeStateUser, modifyUser } from "../../service
 import { errorHandler } from "../../config/CustomError";
 // Validate user schema 
 import { validateUserSchema, validateModifyUserSchema } from "../../schemas/UserSchema";
+// Helpers
+import { verifyToken } from "../../helpers/Token";
+import checkAdmin from "../../helpers/CheckAdmin";
 
 const router = Router();
 router.use(express.json());
@@ -13,7 +16,7 @@ router.use(express.json());
 // Routes
 
 // Get all users
-router.get("/", async (req, res) => {
+router.get("/", verifyToken,checkAdmin,async (req, res) => {
     try{
         const users = await getUsers();
         return res.status(200).json(users);
@@ -24,7 +27,7 @@ router.get("/", async (req, res) => {
 })
 
 // Create user
-router.post("/",validateUserSchema, async (req, res) => {
+router.post("/",verifyToken,checkAdmin,validateUserSchema, async (req, res) => {
     try{
         const user = await createUser(req.body);
         return res.status(201).json(user);
@@ -35,7 +38,7 @@ router.post("/",validateUserSchema, async (req, res) => {
 })
 
 // Disable user
-router.patch("/:id", async (req, res) => {
+router.patch("/:id",verifyToken,checkAdmin, async (req, res) => {
     try{
         const user = await changeStateUser(Number(req.params.id));
         return res.status(200).json(user);
@@ -46,7 +49,7 @@ router.patch("/:id", async (req, res) => {
 })
 
 // Modify user
-router.put("/:id",validateModifyUserSchema, async (req, res) => {
+router.put("/:id",verifyToken,checkAdmin,validateModifyUserSchema, async (req, res) => {
     try{
         const user = await modifyUser(Number(req.params.id), req.body);
         return res.status(200).json(user);
