@@ -15,6 +15,14 @@ export async function getUsers(){
     return users;
 }
 
+export async function getUserByDocument(document_type:string,document:number){
+    const user = await User.findOne({where:{document:document,document_type:document_type}});
+    if(!user){
+        throw new httpError('No se encontró al usuario',404);
+    }
+    return {id: user.id}
+}
+
 export async function changeStateUser(id:number,idUser:number){
     // Search for the user making the action
     const admin = await User.findOne({where:{id:idUser}});

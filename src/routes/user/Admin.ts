@@ -1,7 +1,7 @@
 // Dependencies
 import express, { Router } from "express";
 // Services
-import { getUsers, createUser, changeStateUser, modifyUser } from "../../services/admin/AdminService";
+import { getUsers, getUserByDocument, createUser, changeStateUser, modifyUser } from "../../services/admin/AdminService";
 // CustomError
 import { errorHandler } from "../../config/CustomError";
 // Validate user schema 
@@ -26,6 +26,17 @@ router.get("/", verifyToken,checkAdmin,async (req, res) => {
     }
 })
 
+// Get user id by document type and document
+router.get("/document/:document_type/:document",verifyToken,checkAdmin, async (req, res) => {
+    try{
+        const user = await getUserByDocument(req.params.document_type,Number(req.params.document));
+        return res.status(200).json(user);
+    }
+    catch(error: any){
+        return errorHandler(error, res);
+    }
+})
+
 // Create user
 router.post("/",verifyToken,checkAdmin,validateUserSchema, async (req, res) => {
     try{
@@ -38,7 +49,7 @@ router.post("/",verifyToken,checkAdmin,validateUserSchema, async (req, res) => {
 })
 
 // Disable user
-router.patch("/:id",verifyToken,checkAdmin, async (req, res) => {
+router.patch("/id/:id",verifyToken,checkAdmin, async (req, res) => {
     try{
         const user = await changeStateUser(Number(req.params.id),Number(req.params.idToken));
         return res.status(200).json(user);
@@ -49,7 +60,7 @@ router.patch("/:id",verifyToken,checkAdmin, async (req, res) => {
 })
 
 // Modify user
-router.put("/:id",verifyToken,checkAdmin,validateModifyUserSchema, async (req, res) => {
+router.put("/id/:id",verifyToken,checkAdmin,validateModifyUserSchema, async (req, res) => {
     try{
         const user = await modifyUser(Number(req.params.id), req.body,Number(req.params.idToken));
         return res.status(200).json(user);

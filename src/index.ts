@@ -21,6 +21,7 @@ app.use(cors());
 app.use("/", require("./routes/login/Login"));
 app.use("/admin", require("./routes/user/Admin"));
 app.use("/token", require("./routes/token/Token"));
+app.use("/registry", require("./routes/registry/Registry"));
 
 database
   .authenticate()

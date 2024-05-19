@@ -11,6 +11,7 @@ export const validate = (schema: any) => (req: Request, res: Response, next: Nex
       next(); // Proceed to the route handler if validation succeeds
     } catch (error) {
       if (error instanceof ZodError) {
+        console.log(error)
         // Handle Zod validation errors with detailed messages
         res.status(400).json({message: "Datos invalidos"});
       } else {

@@ -30,12 +30,12 @@ const UserCreateSchema = z.object({
     active: z.boolean().optional()
 })
 const UserModifySchema = z.object({
-    document_type: z.enum(documentTypeSchema as [string, ...string[]]).optional(),
-    document: z.number().optional(),
-    name: z.string().optional(),
-    password: z.string().optional(),
-    role: z.enum(roleSchema as [string, ...string[]]).optional(),
-    active: z.boolean().optional()
+    document_type: z.enum(documentTypeSchema as [string, ...string[]]),
+    document: z.number(),
+    name: z.string(),
+    password: z.string(),
+    role: z.enum(roleSchema as [string, ...string[]]),
+    active: z.boolean()
 })
 const loginSchema = z.object({
     document_type: z.enum(documentTypeSchema as [string, ...string[]]),
