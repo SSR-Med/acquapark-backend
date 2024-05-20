@@ -8,7 +8,7 @@ import { RecordInterface} from "../../schemas/RecordSchema";
 // Helpers
 import { checkDate } from "../../helpers/record/DateRecord";
 
-export async function getRegistries(idUser:Number){
+export async function getRegistries(idUser:number){
     // Search for the user making the action
     const userAction = await User.findOne({where:{id:idUser}});
 
@@ -18,7 +18,7 @@ export async function getRegistries(idUser:Number){
     return records;
 }
 
-export async function deleteRecord(id:Number,idUser:Number){
+export async function deleteRecord(id:number,idUser:number){
     // Search for the user making the action
     const userAction = await User.findOne({where:{id:idUser}});
 
@@ -35,7 +35,11 @@ export async function deleteRecord(id:Number,idUser:Number){
     return {message: "Registro eliminado"};
 }
 
-export async function createRecord(RecordInterface: RecordInterface,idUser:Number){
+export async function createRecord(RecordInterface: RecordInterface,idUser:number){
+    // Check if id_user
+    if(!RecordInterface.id_user){
+        RecordInterface.id_user = idUser;
+    }
     // Search for the user making the action
     const userAction = await User.findOne({where:{id:idUser}});
 
@@ -51,7 +55,7 @@ export async function createRecord(RecordInterface: RecordInterface,idUser:Numbe
     return {message: "Nuevo registro creado"};
 }
 
-export async function modifyRecord(id:Number,RecordInterface: RecordInterface,idUser:Number){
+export async function modifyRecord(id:Number,RecordInterface: RecordInterface,idUser:number){
     // Search for the user making the action
     const userAction = await User.findOne({where:{id:idUser}});
 

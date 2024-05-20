@@ -5,7 +5,7 @@ import { validate } from "../helpers/Validator";
 
 // Interface 
 export interface RecordInterface {
-    id_user: number;
+    id_user?: number;
     reference: string;
     date: string;
     weight: number;
@@ -14,7 +14,7 @@ export interface RecordInterface {
 
 // Schema
 const RecordSchema = z.object({
-    id_user: z.number(),
+    id_user: z.number().optional(),
     reference: z.string(),
     date: z.string(),
     weight: z.number(),

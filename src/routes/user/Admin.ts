@@ -26,6 +26,16 @@ router.get("/", verifyToken,checkAdmin,async (req, res) => {
     }
 })
 
+// Check admin
+router.get("/check_admin",verifyToken,checkAdmin, async (req, res) => {
+    try{
+        return res.status(200).json({admin: true});
+    }
+    catch(error: any){
+        return errorHandler(error, res);
+    }
+})
+
 // Get user id by document type and document
 router.get("/document/:document_type/:document",verifyToken,checkAdmin, async (req, res) => {
     try{
