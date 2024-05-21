@@ -24,7 +24,7 @@ export const roleSchema = ['superadmin','admin','user'];
 const UserCreateSchema = z.object({
     document_type: z.enum(documentTypeSchema as [string, ...string[]]),
     document: z.number(),
-    name: z.string(),
+    name: z.string().min(1),
     password: z.string().length(4),
     role: z.enum(roleSchema as [string, ...string[]]),
     active: z.boolean().optional()
@@ -32,7 +32,7 @@ const UserCreateSchema = z.object({
 const UserModifySchema = z.object({
     document_type: z.enum(documentTypeSchema as [string, ...string[]]),
     document: z.number(),
-    name: z.string(),
+    name: z.string().min(1),
     password: z.string(),
     role: z.enum(roleSchema as [string, ...string[]]),
     active: z.boolean()

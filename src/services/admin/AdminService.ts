@@ -83,14 +83,14 @@ export async function modifyUser(id:number, UserInterface: UserInterface,idUser:
         || (user.role == 'superadmin' && admin.role != 'superadmin') || (UserInterface.role == 'superadmin' && user.role != 'superadmin')){
         throw new httpError('No se puede realizar la acción',401);
     }
-
-    if (UserInterface.password){
-        if (UserInterface.password.length != 4){
-            UserInterface.password = user.password;
-        }
-        else{
-            UserInterface.password = generatePassword(UserInterface.password);
-        }
+    if(UserInterface.password == '' || UserInterface.password == undefined){
+        UserInterface.password = user.password;
+    }
+    else if (UserInterface.password.length < 4 ){
+        throw new httpError('La contraseña debe tener al menos 4 caracteres',400);
+    }
+    else{
+        UserInterface.password = generatePassword(UserInterface.password);
     }
     UserInterface.name = capitalizeWords(deleteBlankSpaces(UserInterface.name));
     await user.update(UserInterface);
