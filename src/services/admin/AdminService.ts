@@ -6,9 +6,12 @@ import { UserInterface } from "../../schemas/UserSchema";
 import { httpError } from "../../config/CustomError";
 // Helpers
 import { generatePassword } from "../../helpers/user/Password";
+import { deleteBlankSpaces,capitalizeWords } from "../../helpers/FormatString";
 
 export async function getUsers(){
-    const users = await User.findAll();
+    const users = await User.findAll({
+        order: [['id', 'ASC']],
+    });
     users.forEach((user: typeof User) => {
         user.dataValues.password = '';
     });
@@ -55,6 +58,7 @@ export async function createUser(UserInterface: UserInterface, idUser:number){
     }
 
     UserInterface.password = generatePassword(UserInterface.password)
+    UserInterface.name = capitalizeWords(deleteBlankSpaces(UserInterface.name));
     await User.create(UserInterface);
     return {message: "Nuevo usuario creado"};
 }
@@ -88,6 +92,7 @@ export async function modifyUser(id:number, UserInterface: UserInterface,idUser:
             UserInterface.password = generatePassword(UserInterface.password);
         }
     }
+    UserInterface.name = capitalizeWords(deleteBlankSpaces(UserInterface.name));
     await user.update(UserInterface);
     return {message: "Usuario modificado"}
 }

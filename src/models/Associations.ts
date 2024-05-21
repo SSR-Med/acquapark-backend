@@ -1,8 +1,8 @@
 // Models
 import {User} from "./User";
-import { Registry } from "./Record";
+import { Record } from "./Record";
 
 // Associations
-User.hasMany(Registry, {foreignKey: 'id_user'});
-Registry.belongsTo(User, {foreignKey: 'id_user'});
+User.hasMany(Record, {foreignKey: 'id_user'});
+Record.belongsTo(User, {foreignKey: 'id_user'});
 
