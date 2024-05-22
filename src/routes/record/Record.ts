@@ -21,6 +21,7 @@ router.get("/",verifyToken, async (req, res) => {
         return res.status(200).json(registries);
     }
     catch(error: any){
+        console.log(error)
         return errorHandler(error, res);
     }
 })

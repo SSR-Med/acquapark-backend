@@ -1,3 +1,5 @@
+// Dependencies
+import { Sequelize } from "sequelize";
 // Models
 import { Record } from "../../models/Record";
 import { User } from "../../models/User";
@@ -13,8 +15,28 @@ export async function getRegistries(idUser:number){
     const userAction = await User.findOne({where:{id:idUser}});
 
     const records = await Record.findAll({
-        where: userAction.role === 'user' ? { id_user: idUser } : {},
-    });
+        raw:true,
+        where: userAction.role === 'user' ? {id_user:idUser} : {}
+        ,
+        order: [['date', 'DESC']],
+        attributes: [
+            'id',
+            [Sequelize.col('user.name'),'name'],
+            [Sequelize.col('user.document'),'document'],
+            [Sequelize.col('user.document_type'),'document_type'],
+            'reference',
+            'date',
+            'weight',
+            'large'
+        ],
+        include:[
+        {
+
+            model: User,
+            attributes: [],
+            required: true
+        },
+    ]});
     return records;
 }
 

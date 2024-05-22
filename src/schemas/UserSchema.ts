@@ -19,7 +19,7 @@ export interface loginInterface{
 }
 
 // Schema
-export const documentTypeSchema = ['CC','CE','TI','PP'];
+export const documentTypeSchema = ['CC','CE','TI','PA'];
 export const roleSchema = ['superadmin','admin','user'];
 const UserCreateSchema = z.object({
     document_type: z.enum(documentTypeSchema as [string, ...string[]]),

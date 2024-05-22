@@ -4,9 +4,13 @@ import { Reference } from "../../models/Reference";
 import { httpError } from "../../config/CustomError";
 // Schema
 import { ReferenceInterface } from "../../schemas/ReferenceSchema";
+// Helpers
+import { deleteBlankSpaces,capitalizeWords } from "../../helpers/FormatString";
 
 export async function getReferences(){
-    const references = await Reference.findAll();
+    const references = await Reference.findAll({
+        order: [['id', 'ASC']]
+    });
     return references;
 }
 
@@ -36,6 +40,7 @@ export async function createReference(ReferenceInterface: ReferenceInterface){
     if (referenceId){
         throw new httpError('Ya existe una referencia con ese id',400);
     }
+    ReferenceInterface.name = capitalizeWords(deleteBlankSpaces(ReferenceInterface.name));
     await Reference.create(ReferenceInterface);
     return {message: "Nueva referencia creada"};
 }
@@ -53,6 +58,7 @@ export async function modifyReference(id:Number,ReferenceInterface: ReferenceInt
     if (referenceName && referenceName.id != id){
         throw new httpError('Ya existe una referencia con ese nombre',400);
     }
+    ReferenceInterface.name = capitalizeWords(deleteBlankSpaces(ReferenceInterface.name));
     reference.update(ReferenceInterface);
     return {message: "Referencia modificada"};
 }
