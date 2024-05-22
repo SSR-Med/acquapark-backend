@@ -4,31 +4,31 @@ import {z} from "zod";
 import { validate } from "../helpers/Validator";
 
 // Interface
-export interface UserInterface {
-    document_type: string;
-    document: number;
-    name: string;
-    password: string;
-    role: string;
-    active?: boolean;
-}
 export interface loginInterface{
     document_type: string;
     document: number;
     password: string;
 }
+export interface UserInterface extends loginInterface {
+    name: string;
+    role: string;
+    active?: boolean;
+}
+
 
 // Schema
 export const documentTypeSchema = ['CC','CE','TI','PA'];
 export const roleSchema = ['superadmin','admin','user'];
-const UserCreateSchema = z.object({
+const loginSchema = z.object({
     document_type: z.enum(documentTypeSchema as [string, ...string[]]),
     document: z.number(),
+    password: z.string().length(4)
+})
+const UserCreateSchema = z.object({
     name: z.string().min(1),
-    password: z.string().length(4),
     role: z.enum(roleSchema as [string, ...string[]]),
     active: z.boolean().optional()
-})
+}).merge(loginSchema);
 const UserModifySchema = z.object({
     document_type: z.enum(documentTypeSchema as [string, ...string[]]),
     document: z.number(),
@@ -37,11 +37,7 @@ const UserModifySchema = z.object({
     role: z.enum(roleSchema as [string, ...string[]]),
     active: z.boolean()
 })
-const loginSchema = z.object({
-    document_type: z.enum(documentTypeSchema as [string, ...string[]]),
-    document: z.number(),
-    password: z.string().length(4)
-})
+
 
 // Validator
 export const validateUserSchema = validate(UserCreateSchema);

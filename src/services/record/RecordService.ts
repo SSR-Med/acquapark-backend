@@ -6,7 +6,7 @@ import { User } from "../../models/User";
 // Custom error
 import { httpError } from "../../config/CustomError";
 // Schema
-import { RecordInterface} from "../../schemas/RecordSchema";
+import { RecordInterface, ModifyRecordInterface } from "../../schemas/RecordSchema";
 // Helpers
 import { checkDate } from "../../helpers/record/DateRecord";
 
@@ -65,10 +65,6 @@ export async function createRecord(RecordInterface: RecordInterface,idUser:numbe
     // Search for the user making the action
     const userAction = await User.findOne({where:{id:idUser}});
 
-    // If the user is not an admin, the id_user must be the same as the id of the user making the action
-    if(userAction.role === 'user' && RecordInterface.id_user !== idUser){
-        throw new httpError('No se puede realizar la acción',401);
-    }
     // Check if the date is valid
     if (!checkDate(RecordInterface.date)){
         throw new httpError('Fecha inválida',400);
@@ -77,7 +73,7 @@ export async function createRecord(RecordInterface: RecordInterface,idUser:numbe
     return {message: "Nuevo registro creado"};
 }
 
-export async function modifyRecord(id:Number,RecordInterface: RecordInterface,idUser:number){
+export async function modifyRecord(id:Number,ModifyRecordInterface: ModifyRecordInterface,idUser:number){
     // Search for the user making the action
     const userAction = await User.findOne({where:{id:idUser}});
 
@@ -85,13 +81,25 @@ export async function modifyRecord(id:Number,RecordInterface: RecordInterface,id
     if(!record){
         throw new httpError('No se encontró el registro',404);
     }
-    if(userAction.role === 'user' && record.id_user != idUser || (userAction.role === 'user' && RecordInterface.id_user != idUser)){
+    // Check if user exists with document and document_type
+    const user = await User.findOne({where:{document:ModifyRecordInterface.document,document_type:ModifyRecordInterface.document_type}});
+    if(!user){
+        throw new httpError('Usuario no encontrado',404);
+    }
+    // Check if the user making the action is the same as the user to be modified
+    if(userAction.role === 'user' && record.id_user != idUser || (userAction.role === 'user' && user.id != idUser)){
         throw new httpError('No se puede realizar la acción',401);
     }
     // Check if the date is valid
-    if (!checkDate(RecordInterface.date)){
+    if (!checkDate(ModifyRecordInterface.date)){
         throw new httpError('Fecha inválida',400);
     }
-    await record.update({...RecordInterface, date: new Date(RecordInterface.date)});
+    await record.update({
+        user_id: user.id,
+        reference: ModifyRecordInterface.reference,
+        date: new Date(ModifyRecordInterface.date),
+        weight: ModifyRecordInterface.weight,
+        large: ModifyRecordInterface.large
+    });
     return {message: "Registro modificado"};
 }

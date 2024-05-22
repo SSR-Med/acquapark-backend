@@ -6,5 +6,5 @@ export class httpError extends Error {
   }
 }
 export function errorHandler(error: any, res: any){
-  if (error.statusCode) return res.status(error.statusCode).json({message: error.message}); else return res.status(500).json({message:'Internal server error'});
+  if (error.statusCode) return res.status(error.statusCode).json({message: error.message}); else return res.status(500).json({message:'Error'});
 }

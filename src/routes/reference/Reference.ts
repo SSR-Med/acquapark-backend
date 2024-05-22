@@ -13,7 +13,7 @@ import { validateReferenceSchema } from "../../schemas/ReferenceSchema";
 const router = Router();
 router.use(express.json());
 
-router.get("/",verifyToken,checkAdmin, async (req, res) => {
+router.get("/",verifyToken,async (req, res) => {
     try{
         const references = await getReferences();
         return res.status(200).json(references);
