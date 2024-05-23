@@ -7,7 +7,7 @@ import { errorHandler } from "../../config/CustomError";
 // Helpers
 import { verifyToken } from "../../helpers/Token";
 // Schema
-import { validateRecordSchema } from "../../schemas/RecordSchema";
+import { validateRecordSchema, validateModifyRecordSchema } from "../../schemas/RecordSchema";
 
 const router = Router();
 router.use(express.json());
@@ -21,6 +21,7 @@ router.get("/",verifyToken, async (req, res) => {
         return res.status(200).json(registries);
     }
     catch(error: any){
+        console.log(error)
         return errorHandler(error, res);
     }
 })
@@ -37,12 +38,13 @@ router.post("/",verifyToken,validateRecordSchema, async (req, res) => {
 })
 
 // Modify registry
-router.put("/id/:id",verifyToken,validateRecordSchema, async (req, res) => {
+router.put("/id/:id",verifyToken,validateModifyRecordSchema, async (req, res) => {
     try{
         const registry = await modifyRecord(Number(req.params.id),req.body,Number(req.params.idToken));
         return res.status(200).json(registry);
     }
     catch(error: any){
+        console.log(error)
         return errorHandler(error, res);
     }
 })

@@ -12,6 +12,7 @@ const app: Express = express();
 const {Reference} = require("./models/Reference");
 const {User} = require("./models/User");
 const {Record} = require("./models/Record");
+require("./models/Associations");
 
 // Middleware and json
 app.use(express.json());

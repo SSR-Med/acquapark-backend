@@ -12,13 +12,22 @@ export interface RecordInterface {
     large: number;
 }
 
+export interface ModifyRecordInterface extends RecordInterface {
+    document_type: string;
+    document: number;
+}
+
 // Schema
 const RecordSchema = z.object({
-    id_user: z.number().optional(),
     reference: z.string(),
     date: z.string(),
     weight: z.number(),
     large: z.number()
 })
+const modifyRecordSchema = z.object({
+    document_type: z.string(),
+    document: z.number(),
+}).merge(RecordSchema);
 // Validator
 export const validateRecordSchema = validate(RecordSchema);
+export const validateModifyRecordSchema = validate(modifyRecordSchema);
