@@ -15,6 +15,7 @@ const app = (0, express_1.default)();
 const { Reference } = require("./models/Reference");
 const { User } = require("./models/User");
 const { Record } = require("./models/Record");
+require("./models/Associations");
 // Middleware and json
 app.use(express_1.default.json());
 app.use(cors());

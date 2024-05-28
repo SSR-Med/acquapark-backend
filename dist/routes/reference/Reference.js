@@ -48,7 +48,7 @@ const CheckAdmin_1 = __importDefault(require("../../helpers/CheckAdmin"));
 const ReferenceSchema_1 = require("../../schemas/ReferenceSchema");
 const router = (0, express_1.Router)();
 router.use(express_1.default.json());
-router.get("/", Token_1.verifyToken, CheckAdmin_1.default, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.get("/", Token_1.verifyToken, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const references = yield (0, ReferenceService_1.getReferences)();
         return res.status(200).json(references);

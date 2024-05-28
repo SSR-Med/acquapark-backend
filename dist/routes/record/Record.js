@@ -52,6 +52,7 @@ router.get("/", Token_1.verifyToken, (req, res) => __awaiter(void 0, void 0, voi
         return res.status(200).json(registries);
     }
     catch (error) {
+        console.log(error);
         return (0, CustomError_1.errorHandler)(error, res);
     }
 }));
@@ -66,12 +67,13 @@ router.post("/", Token_1.verifyToken, RecordSchema_1.validateRecordSchema, (req,
     }
 }));
 // Modify registry
-router.put("/id/:id", Token_1.verifyToken, RecordSchema_1.validateRecordSchema, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.put("/id/:id", Token_1.verifyToken, RecordSchema_1.validateModifyRecordSchema, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const registry = yield (0, RecordService_1.modifyRecord)(Number(req.params.id), req.body, Number(req.params.idToken));
         return res.status(200).json(registry);
     }
     catch (error) {
+        console.log(error);
         return (0, CustomError_1.errorHandler)(error, res);
     }
 }));

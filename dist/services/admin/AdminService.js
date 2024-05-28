@@ -16,9 +16,12 @@ const User_1 = require("../../models/User");
 const CustomError_1 = require("../../config/CustomError");
 // Helpers
 const Password_1 = require("../../helpers/user/Password");
+const FormatString_1 = require("../../helpers/FormatString");
 function getUsers() {
     return __awaiter(this, void 0, void 0, function* () {
-        const users = yield User_1.User.findAll();
+        const users = yield User_1.User.findAll({
+            order: [['id', 'ASC']],
+        });
         users.forEach((user) => {
             user.dataValues.password = '';
         });
@@ -66,6 +69,7 @@ function createUser(UserInterface, idUser) {
             throw new CustomError_1.httpError('No se puede realizar la acción', 401);
         }
         UserInterface.password = (0, Password_1.generatePassword)(UserInterface.password);
+        UserInterface.name = (0, FormatString_1.capitalizeWords)((0, FormatString_1.deleteBlankSpaces)(UserInterface.name));
         yield User_1.User.create(UserInterface);
         return { message: "Nuevo usuario creado" };
     });
@@ -90,14 +94,16 @@ function modifyUser(id, UserInterface, idUser) {
             || (user.role == 'superadmin' && admin.role != 'superadmin') || (UserInterface.role == 'superadmin' && user.role != 'superadmin')) {
             throw new CustomError_1.httpError('No se puede realizar la acción', 401);
         }
-        if (UserInterface.password) {
-            if (UserInterface.password.length != 4) {
-                UserInterface.password = user.password;
-            }
-            else {
-                UserInterface.password = (0, Password_1.generatePassword)(UserInterface.password);
-            }
+        if (UserInterface.password == '' || UserInterface.password == undefined) {
+            UserInterface.password = user.password;
         }
+        else if (UserInterface.password.length < 4) {
+            throw new CustomError_1.httpError('La contraseña debe tener al menos 4 caracteres', 400);
+        }
+        else {
+            UserInterface.password = (0, Password_1.generatePassword)(UserInterface.password);
+        }
+        UserInterface.name = (0, FormatString_1.capitalizeWords)((0, FormatString_1.deleteBlankSpaces)(UserInterface.name));
         yield user.update(UserInterface);
         return { message: "Usuario modificado" };
     });

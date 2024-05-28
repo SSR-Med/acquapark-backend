@@ -14,9 +14,13 @@ exports.modifyReference = exports.createReference = exports.deleteReference = ex
 const Reference_1 = require("../../models/Reference");
 // Custom error
 const CustomError_1 = require("../../config/CustomError");
+// Helpers
+const FormatString_1 = require("../../helpers/FormatString");
 function getReferences() {
     return __awaiter(this, void 0, void 0, function* () {
-        const references = yield Reference_1.Reference.findAll();
+        const references = yield Reference_1.Reference.findAll({
+            order: [['id', 'ASC']]
+        });
         return references;
     });
 }
@@ -52,6 +56,7 @@ function createReference(ReferenceInterface) {
         if (referenceId) {
             throw new CustomError_1.httpError('Ya existe una referencia con ese id', 400);
         }
+        ReferenceInterface.name = (0, FormatString_1.capitalizeWords)((0, FormatString_1.deleteBlankSpaces)(ReferenceInterface.name));
         yield Reference_1.Reference.create(ReferenceInterface);
         return { message: "Nueva referencia creada" };
     });
@@ -71,6 +76,7 @@ function modifyReference(id, ReferenceInterface) {
         if (referenceName && referenceName.id != id) {
             throw new CustomError_1.httpError('Ya existe una referencia con ese nombre', 400);
         }
+        ReferenceInterface.name = (0, FormatString_1.capitalizeWords)((0, FormatString_1.deleteBlankSpaces)(ReferenceInterface.name));
         reference.update(ReferenceInterface);
         return { message: "Referencia modificada" };
     });
