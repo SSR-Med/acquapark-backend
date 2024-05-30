@@ -19,11 +19,11 @@ app.use(express.json());
 app.use(cors());
 
 // Routes
-app.use("/", require("./routes/login/Login"));
-app.use("/admin", require("./routes/user/Admin"));
-app.use("/token", require("./routes/token/Token"));
-app.use("/record", require("./routes/record/Record"));
-app.use("/reference", require("./routes/reference/Reference"));
+app.use("/api", require("./routes/login/Login"));
+app.use("/api/admin", require("./routes/user/Admin"));
+app.use("/api/token", require("./routes/token/Token"));
+app.use("/api/record", require("./routes/record/Record"));
+app.use("/api/reference", require("./routes/reference/Reference"));
 
 database
   .authenticate()
