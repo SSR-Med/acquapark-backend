@@ -25,7 +25,7 @@ export async function deleteBug(id:number){
     if(!bug){
         throw new httpError('No se encontró el fallo',404);
     }
-    bug.destroy();
+    await bug.destroy();
     return {message: "Fallo eliminado"};
 }
 
@@ -39,6 +39,6 @@ export async function modifyBug(id:number,BugInterface: BugInterface){
     if(bugName && bugName.id != id){
         throw new httpError('Ya existe un fallo con ese nombre',400);
     }
-    bug.update(BugInterface);
+    await bug.update(BugInterface);
     return {message: "Fallo modificado"};
 }

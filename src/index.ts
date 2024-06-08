@@ -14,6 +14,7 @@ const {User} = require("./models/User");
 const {Record} = require("./models/Record");
 const {Bug} = require("./models/Bug");
 const {Machine} = require("./models/Machine");
+const {Alert} = require("./models/Alert");
 require("./models/Associations");
 
 // Middleware and json
@@ -28,6 +29,7 @@ app.use("/api/record", require("./routes/record/Record"));
 app.use("/api/reference", require("./routes/reference/Reference"));
 app.use("/api/bug", require("./routes/bug/Bug"));
 app.use("/api/machine", require("./routes/bug/Machine"));
+app.use("/api/alert", require("./routes/bug/Alert"));
 
 database
   .authenticate()

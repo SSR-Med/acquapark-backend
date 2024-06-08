@@ -10,7 +10,7 @@ export interface BugInterface {
 
 // Schema
 const BugSchema = z.object({
-    name: z.string()
+    name: z.string().min(1)
 })
 
 // Validator

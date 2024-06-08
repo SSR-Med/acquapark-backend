@@ -10,7 +10,7 @@ export interface MachineInterface {
 
 // Schema
 const MachineSchema = z.object({
-    name: z.string()
+    name: z.string().min(1)
 })
 
 // Validator

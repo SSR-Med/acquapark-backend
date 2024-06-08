@@ -62,9 +62,6 @@ export async function createRecord(RecordInterface: RecordInterface,idUser:numbe
     if(!RecordInterface.id_user){
         RecordInterface.id_user = idUser;
     }
-    // Search for the user making the action
-    const userAction = await User.findOne({where:{id:idUser}});
-
     // Check if the date is valid
     if (!checkDate(RecordInterface.date)){
         throw new httpError('Fecha inválida',400);
@@ -94,12 +91,11 @@ export async function modifyRecord(id:Number,ModifyRecordInterface: ModifyRecord
     if (!checkDate(ModifyRecordInterface.date)){
         throw new httpError('Fecha inválida',400);
     }
+    // Change the date and user id
+    ModifyRecordInterface.id_user = user.id;
     await record.update({
-        user_id: user.id,
-        reference: ModifyRecordInterface.reference,
-        date: new Date(ModifyRecordInterface.date),
-        weight: ModifyRecordInterface.weight,
-        large: ModifyRecordInterface.large
+        ...ModifyRecordInterface,
+        date: new Date(ModifyRecordInterface.date)
     });
     return {message: "Registro modificado"};
 }
