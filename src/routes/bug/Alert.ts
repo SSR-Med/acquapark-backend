@@ -16,7 +16,6 @@ router.get('/', verifyToken,async (req:Request,res:Response)=>{
         const alerts = await getAlerts(Number(req.params.idToken));
         res.json(alerts);
     }catch(error){
-        console.log(error)
         errorHandler(error,res);
     }
 })

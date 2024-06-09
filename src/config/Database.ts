@@ -1,6 +1,5 @@
 // Dependencies
 const {Sequelize} = require('sequelize');
-import { time } from "console";
 // Env variables
 import { database_name, database_host, database_password, database_port, database_user} from "./Config";
 
