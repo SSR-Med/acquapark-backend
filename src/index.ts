@@ -30,6 +30,7 @@ app.use("/api/reference", require("./routes/reference/Reference"));
 app.use("/api/bug", require("./routes/bug/Bug"));
 app.use("/api/machine", require("./routes/bug/Machine"));
 app.use("/api/alert", require("./routes/bug/Alert"));
+app.use("/api/log", require("./routes/log/Log"));
 
 database
   .authenticate()

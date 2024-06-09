@@ -9,6 +9,8 @@ import { httpError } from "../../config/CustomError";
 import { AlertInterface, ModifyAlertInterface } from "../../schemas/AlertSchema";
 // Helpers
 import { checkDate } from "../../helpers/record/DateRecord";
+// Log
+import { customLogger } from "../../config/Log";
 
 export async function getAlerts(idUser:number){
     const userAction = await User.findOne({where:{id:idUser}});
@@ -42,7 +44,8 @@ export async function createAlert(AlertInterface: AlertInterface,idUser:number){
         throw new httpError('La fecha no es válida',400);
     }
     const alert = await Alert.create({...AlertInterface,date: new Date(AlertInterface.date)});
-    return {message: "Alerta creada"};
+    customLogger.info(`El usuario con la id ${idUser} creó una alarma de la máquina ${AlertInterface.machine} con el fallo ${AlertInterface.bug}`);
+    return {message: "Alarma creada"};
 }
 
 export async function deleteAlert(id:number,idUser:number){
@@ -50,13 +53,14 @@ export async function deleteAlert(id:number,idUser:number){
     const userAction = await User.findOne({where:{id:idUser}});
     const alert = await Alert.findOne({where:{id:id}});
     if(!alert){
-        throw new httpError('No se encontró la alerta',404);
+        throw new httpError('No se encontró la alarma',404);
     }
     if(userAction.role === 'user' && alert.id_user != idUser){
         throw new httpError('No se puede realizar la acción',401);
     }
     await alert.destroy();
-    return {message: "Alerta eliminada"};
+    customLogger.info(`El usuario con la id ${idUser} eliminó una alarma de la máquina ${alert.machine} con el fallo ${alert.bug}`);
+    return {message: "Alarma eliminada"};
 }
 
 export async function modifyAlert(id:number,ModifyAlertInterface:ModifyAlertInterface,idUser:number){
@@ -65,7 +69,7 @@ export async function modifyAlert(id:number,ModifyAlertInterface:ModifyAlertInte
 
     const alert = await Alert.findOne({where:{id:id}});
     if(!alert){
-        throw new httpError('No se encontró la alerta',404);
+        throw new httpError('No se encontró la alarma',404);
     }
     if(!checkDate(ModifyAlertInterface.date)){
         throw new httpError('La fecha no es válida',400);
@@ -85,6 +89,7 @@ export async function modifyAlert(id:number,ModifyAlertInterface:ModifyAlertInte
         ...ModifyAlertInterface,
         date: new Date(ModifyAlertInterface.date)
     })
-    return {message: "Alerta modificada"};
+    customLogger.info(`El usuario con la id ${idUser} modificó una alarma de la máquina ${alert.machine} con el fallo ${alert.bug}`);
+    return {message: "Alarma modificada"};
 }
 

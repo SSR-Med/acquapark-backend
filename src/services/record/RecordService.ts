@@ -9,6 +9,8 @@ import { httpError } from "../../config/CustomError";
 import { RecordInterface, ModifyRecordInterface } from "../../schemas/RecordSchema";
 // Helpers
 import { checkDate } from "../../helpers/record/DateRecord";
+// Log
+import { customLogger } from "../../config/Log";
 
 export async function getRegistries(idUser:number){
     // Search for the user making the action
@@ -52,8 +54,8 @@ export async function deleteRecord(id:number,idUser:number){
     if (userAction.role === 'user' && record.id_user != idUser){
         throw new httpError('No se puede realizar la acción',401);
     }
-
     record.destroy();
+    customLogger.info(`El usuario con la id ${idUser} eliminó un registro con la referencia ${record.reference}`);
     return {message: "Registro eliminado"};
 }
 
@@ -67,6 +69,7 @@ export async function createRecord(RecordInterface: RecordInterface,idUser:numbe
         throw new httpError('Fecha inválida',400);
     }
     await Record.create({...RecordInterface, date: new Date(RecordInterface.date)});
+    customLogger.info(`El usuario con la id ${idUser} creó un registro con la referencia ${RecordInterface.reference}`);
     return {message: "Nuevo registro creado"};
 }
 
@@ -97,5 +100,6 @@ export async function modifyRecord(id:Number,ModifyRecordInterface: ModifyRecord
         ...ModifyRecordInterface,
         date: new Date(ModifyRecordInterface.date)
     });
+    customLogger.info(`El usuario con la id ${idUser} modificó un registro con la referencia ${record.reference}`);
     return {message: "Registro modificado"};
 }

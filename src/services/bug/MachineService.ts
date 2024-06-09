@@ -6,6 +6,8 @@ import { Machine } from "../../models/Machine";
 import { MachineInterface } from "../../schemas/MachineSchema";
 // Error
 import { httpError } from "../../config/CustomError";
+// Log
+import { customLogger } from "../../config/Log";
 
 export async function getMachines(){
     const machineries = await Machine.findAll({
@@ -17,6 +19,7 @@ export async function getMachines(){
 export async function createMachine(MachineInterface: MachineInterface){
     MachineInterface.name = capitalizeWords(deleteBlankSpaces(MachineInterface.name));
     const machine = await Machine.create(MachineInterface);
+    customLogger.info(`Se creó una máquina con el nombre ${MachineInterface.name}`);
     return {message: "Máquina creada"};
 }
 
@@ -26,6 +29,7 @@ export async function deleteMachine(id:number){
         throw new httpError('No se encontró la máquina',404);
     }
     machine.destroy();
+    customLogger.info(`Se eliminó una máquina con el nombre ${machine.name}`);
     return {message: "Máquina eliminada"};
 }
 
@@ -40,5 +44,6 @@ export async function modifyMachine(id:number,MachineInterface: MachineInterface
         throw new httpError('Ya existe una maquina con ese nombre',400);
     }
     machine.update(MachineInterface);
+    customLogger.info(`Se modificó una máquina con el nombre ${MachineInterface.name}`);
     return {message: "Máquina modificada"};
 }

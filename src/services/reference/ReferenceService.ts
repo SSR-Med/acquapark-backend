@@ -6,6 +6,8 @@ import { httpError } from "../../config/CustomError";
 import { ReferenceInterface } from "../../schemas/ReferenceSchema";
 // Helpers
 import { deleteBlankSpaces,capitalizeWords } from "../../helpers/FormatString";
+// Log
+import { customLogger } from "../../config/Log";
 
 export async function getReferences(){
     const references = await Reference.findAll({
@@ -28,6 +30,7 @@ export async function deleteReference(id:Number){
         throw new httpError('No se encontró la referencia',404);
     }
     reference.destroy();
+    customLogger.info(`Se eliminó una referencia con el nombre ${reference.name}`);
     return {message: "Referencia eliminada"};
 }
 
@@ -42,6 +45,7 @@ export async function createReference(ReferenceInterface: ReferenceInterface){
     }
     ReferenceInterface.name = capitalizeWords(deleteBlankSpaces(ReferenceInterface.name));
     await Reference.create(ReferenceInterface);
+    customLogger.info(`Se creó una referencia con el nombre ${ReferenceInterface.name}`);
     return {message: "Nueva referencia creada"};
 }
 
@@ -60,5 +64,6 @@ export async function modifyReference(id:Number,ReferenceInterface: ReferenceInt
     }
     ReferenceInterface.name = capitalizeWords(deleteBlankSpaces(ReferenceInterface.name));
     reference.update(ReferenceInterface);
+    customLogger.info(`Se modificó una referencia con el nombre ${ReferenceInterface.name}`);
     return {message: "Referencia modificada"};
 }
