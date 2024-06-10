@@ -9,6 +9,8 @@ import { httpError } from "../../config/CustomError";
 import { RecordInterface, ModifyRecordInterface } from "../../schemas/RecordSchema";
 // Helpers
 import { checkDate } from "../../helpers/record/DateRecord";
+// Log
+import { customLogger } from "../../config/Log";
 
 export async function getRegistries(idUser:number){
     // Search for the user making the action
@@ -52,8 +54,8 @@ export async function deleteRecord(id:number,idUser:number){
     if (userAction.role === 'user' && record.id_user != idUser){
         throw new httpError('No se puede realizar la acción',401);
     }
-
     record.destroy();
+    customLogger.info(`El usuario con la id ${idUser} eliminó un registro con la referencia ${record.reference}`);
     return {message: "Registro eliminado"};
 }
 
@@ -62,14 +64,12 @@ export async function createRecord(RecordInterface: RecordInterface,idUser:numbe
     if(!RecordInterface.id_user){
         RecordInterface.id_user = idUser;
     }
-    // Search for the user making the action
-    const userAction = await User.findOne({where:{id:idUser}});
-
     // Check if the date is valid
     if (!checkDate(RecordInterface.date)){
         throw new httpError('Fecha inválida',400);
     }
     await Record.create({...RecordInterface, date: new Date(RecordInterface.date)});
+    customLogger.info(`El usuario con la id ${idUser} creó un registro con la referencia ${RecordInterface.reference}`);
     return {message: "Nuevo registro creado"};
 }
 
@@ -94,12 +94,12 @@ export async function modifyRecord(id:Number,ModifyRecordInterface: ModifyRecord
     if (!checkDate(ModifyRecordInterface.date)){
         throw new httpError('Fecha inválida',400);
     }
+    // Change the date and user id
+    ModifyRecordInterface.id_user = user.id;
     await record.update({
-        user_id: user.id,
-        reference: ModifyRecordInterface.reference,
-        date: new Date(ModifyRecordInterface.date),
-        weight: ModifyRecordInterface.weight,
-        large: ModifyRecordInterface.large
+        ...ModifyRecordInterface,
+        date: new Date(ModifyRecordInterface.date)
     });
+    customLogger.info(`El usuario con la id ${idUser} modificó un registro con la referencia ${record.reference}`);
     return {message: "Registro modificado"};
 }

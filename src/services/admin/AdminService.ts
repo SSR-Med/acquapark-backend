@@ -7,6 +7,8 @@ import { httpError } from "../../config/CustomError";
 // Helpers
 import { generatePassword } from "../../helpers/user/Password";
 import { deleteBlankSpaces,capitalizeWords } from "../../helpers/FormatString";
+// Log
+import { customLogger } from "../../config/Log";
 
 export async function getUsers(){
     const users = await User.findAll({
@@ -38,8 +40,8 @@ export async function changeStateUser(id:number,idUser:number){
     if (user.role == 'superadmin' || (user.role == 'admin' && admin.role == 'admin') || user.id == idUser){
         throw new httpError('No se puede realizar la acción',401);
     }
-    
-    user.update({active:!user.active});
+    await user.update({active:!user.active});
+    customLogger.info(`El administrador ${admin.name} cambió el estado del usuario ${user.name}`);
     return {message: "Estado del usuario modificado"};
 }
 
@@ -60,6 +62,7 @@ export async function createUser(UserInterface: UserInterface, idUser:number){
     UserInterface.password = generatePassword(UserInterface.password)
     UserInterface.name = capitalizeWords(deleteBlankSpaces(UserInterface.name));
     await User.create(UserInterface);
+    customLogger.info(`El administrador ${admin.name} creó al usuario ${UserInterface.name}`);
     return {message: "Nuevo usuario creado"};
 }
 
@@ -93,6 +96,7 @@ export async function modifyUser(id:number, UserInterface: UserInterface,idUser:
         UserInterface.password = generatePassword(UserInterface.password);
     }
     UserInterface.name = capitalizeWords(deleteBlankSpaces(UserInterface.name));
+    customLogger.info(`El administrador ${admin.name} modificó al usuario ${user.name}`);
     await user.update(UserInterface);
     return {message: "Usuario modificado"}
 }

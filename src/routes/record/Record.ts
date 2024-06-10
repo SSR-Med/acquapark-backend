@@ -21,7 +21,6 @@ router.get("/",verifyToken, async (req, res) => {
         return res.status(200).json(registries);
     }
     catch(error: any){
-        console.log(error)
         return errorHandler(error, res);
     }
 })
@@ -44,7 +43,6 @@ router.put("/id/:id",verifyToken,validateModifyRecordSchema, async (req, res) =>
         return res.status(200).json(registry);
     }
     catch(error: any){
-        console.log(error)
         return errorHandler(error, res);
     }
 })
