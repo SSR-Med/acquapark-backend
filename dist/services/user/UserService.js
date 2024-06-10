@@ -17,6 +17,8 @@ const CustomError_1 = require("../../config/CustomError");
 // Helpers
 const Password_1 = require("../../helpers/user/Password");
 const Token_1 = require("../../helpers/Token");
+// Log
+const Log_1 = require("../../config/Log");
 function login(loginInterface) {
     return __awaiter(this, void 0, void 0, function* () {
         const user = yield User_1.User.findOne({ where: { document: loginInterface.document, document_type: loginInterface.document_type } });
@@ -25,6 +27,7 @@ function login(loginInterface) {
         }
         const id = user.id;
         if (user && (0, Password_1.comparePassword)(loginInterface.password, user.password)) {
+            Log_1.customLogger.info(`El usuario con nombre ${user.name} inició sesión`);
             return (0, Token_1.createToken)(id);
         }
         else {

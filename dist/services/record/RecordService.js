@@ -19,6 +19,8 @@ const User_1 = require("../../models/User");
 const CustomError_1 = require("../../config/CustomError");
 // Helpers
 const DateRecord_1 = require("../../helpers/record/DateRecord");
+// Log
+const Log_1 = require("../../config/Log");
 function getRegistries(idUser) {
     return __awaiter(this, void 0, void 0, function* () {
         // Search for the user making the action
@@ -61,6 +63,7 @@ function deleteRecord(id, idUser) {
             throw new CustomError_1.httpError('No se puede realizar la acción', 401);
         }
         record.destroy();
+        Log_1.customLogger.info(`El usuario con la id ${idUser} eliminó un registro con la referencia ${record.reference}`);
         return { message: "Registro eliminado" };
     });
 }
@@ -71,13 +74,12 @@ function createRecord(RecordInterface, idUser) {
         if (!RecordInterface.id_user) {
             RecordInterface.id_user = idUser;
         }
-        // Search for the user making the action
-        const userAction = yield User_1.User.findOne({ where: { id: idUser } });
         // Check if the date is valid
         if (!(0, DateRecord_1.checkDate)(RecordInterface.date)) {
             throw new CustomError_1.httpError('Fecha inválida', 400);
         }
         yield Record_1.Record.create(Object.assign(Object.assign({}, RecordInterface), { date: new Date(RecordInterface.date) }));
+        Log_1.customLogger.info(`El usuario con la id ${idUser} creó un registro con la referencia ${RecordInterface.reference}`);
         return { message: "Nuevo registro creado" };
     });
 }
@@ -103,13 +105,10 @@ function modifyRecord(id, ModifyRecordInterface, idUser) {
         if (!(0, DateRecord_1.checkDate)(ModifyRecordInterface.date)) {
             throw new CustomError_1.httpError('Fecha inválida', 400);
         }
-        yield record.update({
-            user_id: user.id,
-            reference: ModifyRecordInterface.reference,
-            date: new Date(ModifyRecordInterface.date),
-            weight: ModifyRecordInterface.weight,
-            large: ModifyRecordInterface.large
-        });
+        // Change the date and user id
+        ModifyRecordInterface.id_user = user.id;
+        yield record.update(Object.assign(Object.assign({}, ModifyRecordInterface), { date: new Date(ModifyRecordInterface.date) }));
+        Log_1.customLogger.info(`El usuario con la id ${idUser} modificó un registro con la referencia ${record.reference}`);
         return { message: "Registro modificado" };
     });
 }

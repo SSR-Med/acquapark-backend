@@ -15,16 +15,23 @@ const app = (0, express_1.default)();
 const { Reference } = require("./models/Reference");
 const { User } = require("./models/User");
 const { Record } = require("./models/Record");
+const { Bug } = require("./models/Bug");
+const { Machine } = require("./models/Machine");
+const { Alert } = require("./models/Alert");
 require("./models/Associations");
 // Middleware and json
 app.use(express_1.default.json());
 app.use(cors());
 // Routes
-app.use("/", require("./routes/login/Login"));
-app.use("/admin", require("./routes/user/Admin"));
-app.use("/token", require("./routes/token/Token"));
-app.use("/record", require("./routes/record/Record"));
-app.use("/reference", require("./routes/reference/Reference"));
+app.use("/api/login", require("./routes/login/Login"));
+app.use("/api/admin", require("./routes/user/Admin"));
+app.use("/api/token", require("./routes/token/Token"));
+app.use("/api/record", require("./routes/record/Record"));
+app.use("/api/reference", require("./routes/reference/Reference"));
+app.use("/api/bug", require("./routes/bug/Bug"));
+app.use("/api/machine", require("./routes/bug/Machine"));
+app.use("/api/alert", require("./routes/bug/Alert"));
+app.use("/api/log", require("./routes/log/Log"));
 Database_1.database
     .authenticate()
     .then(() => {
@@ -32,9 +39,7 @@ Database_1.database
 })
     .then(() => {
     app.listen(Config_1.port, () => {
-        console.log(`Server listen on http://localhost:${Config_1.port}`);
     });
 })
     .catch((error) => {
-    console.error('Connection fail', error);
 });

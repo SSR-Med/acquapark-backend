@@ -17,6 +17,8 @@ const CustomError_1 = require("../../config/CustomError");
 // Helpers
 const Password_1 = require("../../helpers/user/Password");
 const FormatString_1 = require("../../helpers/FormatString");
+// Log
+const Log_1 = require("../../config/Log");
 function getUsers() {
     return __awaiter(this, void 0, void 0, function* () {
         const users = yield User_1.User.findAll({
@@ -51,7 +53,8 @@ function changeStateUser(id, idUser) {
         if (user.role == 'superadmin' || (user.role == 'admin' && admin.role == 'admin') || user.id == idUser) {
             throw new CustomError_1.httpError('No se puede realizar la acción', 401);
         }
-        user.update({ active: !user.active });
+        yield user.update({ active: !user.active });
+        Log_1.customLogger.info(`El administrador ${admin.name} cambió el estado del usuario ${user.name}`);
         return { message: "Estado del usuario modificado" };
     });
 }
@@ -71,6 +74,7 @@ function createUser(UserInterface, idUser) {
         UserInterface.password = (0, Password_1.generatePassword)(UserInterface.password);
         UserInterface.name = (0, FormatString_1.capitalizeWords)((0, FormatString_1.deleteBlankSpaces)(UserInterface.name));
         yield User_1.User.create(UserInterface);
+        Log_1.customLogger.info(`El administrador ${admin.name} creó al usuario ${UserInterface.name}`);
         return { message: "Nuevo usuario creado" };
     });
 }
@@ -104,6 +108,7 @@ function modifyUser(id, UserInterface, idUser) {
             UserInterface.password = (0, Password_1.generatePassword)(UserInterface.password);
         }
         UserInterface.name = (0, FormatString_1.capitalizeWords)((0, FormatString_1.deleteBlankSpaces)(UserInterface.name));
+        Log_1.customLogger.info(`El administrador ${admin.name} modificó al usuario ${user.name}`);
         yield user.update(UserInterface);
         return { message: "Usuario modificado" };
     });

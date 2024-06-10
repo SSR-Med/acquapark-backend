@@ -52,7 +52,6 @@ router.get("/", Token_1.verifyToken, (req, res) => __awaiter(void 0, void 0, voi
         return res.status(200).json(registries);
     }
     catch (error) {
-        console.log(error);
         return (0, CustomError_1.errorHandler)(error, res);
     }
 }));
@@ -73,7 +72,6 @@ router.put("/id/:id", Token_1.verifyToken, RecordSchema_1.validateModifyRecordSc
         return res.status(200).json(registry);
     }
     catch (error) {
-        console.log(error);
         return (0, CustomError_1.errorHandler)(error, res);
     }
 }));

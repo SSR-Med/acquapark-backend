@@ -16,6 +16,8 @@ const Reference_1 = require("../../models/Reference");
 const CustomError_1 = require("../../config/CustomError");
 // Helpers
 const FormatString_1 = require("../../helpers/FormatString");
+// Log
+const Log_1 = require("../../config/Log");
 function getReferences() {
     return __awaiter(this, void 0, void 0, function* () {
         const references = yield Reference_1.Reference.findAll({
@@ -42,6 +44,7 @@ function deleteReference(id) {
             throw new CustomError_1.httpError('No se encontró la referencia', 404);
         }
         reference.destroy();
+        Log_1.customLogger.info(`Se eliminó una referencia con el nombre ${reference.name}`);
         return { message: "Referencia eliminada" };
     });
 }
@@ -58,6 +61,7 @@ function createReference(ReferenceInterface) {
         }
         ReferenceInterface.name = (0, FormatString_1.capitalizeWords)((0, FormatString_1.deleteBlankSpaces)(ReferenceInterface.name));
         yield Reference_1.Reference.create(ReferenceInterface);
+        Log_1.customLogger.info(`Se creó una referencia con el nombre ${ReferenceInterface.name}`);
         return { message: "Nueva referencia creada" };
     });
 }
@@ -78,6 +82,7 @@ function modifyReference(id, ReferenceInterface) {
         }
         ReferenceInterface.name = (0, FormatString_1.capitalizeWords)((0, FormatString_1.deleteBlankSpaces)(ReferenceInterface.name));
         reference.update(ReferenceInterface);
+        Log_1.customLogger.info(`Se modificó una referencia con el nombre ${ReferenceInterface.name}`);
         return { message: "Referencia modificada" };
     });
 }
